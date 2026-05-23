@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 import os.path as path
 import numpy as np
 import tensorflow as tf
@@ -6,6 +7,7 @@ from keras import models, layers, losses
 import matplotlib.pyplot as plt
 
 DATA_DIR = "./data"
+MODEL_DIR = "./models"
 CATEGORIES = [
     "apple",
     "carrot",
@@ -15,6 +17,8 @@ CATEGORIES = [
 ]
 DRAWING_COUNT = 10000
 VALIDATION_FRACTION = 0.2
+
+date = datetime.now().strftime(r"%Y%m%d_%H%M")
 
 data = {}
 
@@ -76,6 +80,7 @@ model.add(layers.Dropout(0.3))
 model.add(layers.Dense(len(CATEGORIES)))
 model.compile(optimizer="adam", loss=losses.SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
 history = model.fit(x=x_training, y=y_training, epochs=10, validation_data=(x_validation, y_validation))
+model.save(path.join(MODEL_DIR, f"{date}.keras"))
 
 plt.plot(history.history["accuracy"], label="accuracy")
 plt.plot(history.history["val_accuracy"], label="val_accuracy")
@@ -83,5 +88,3 @@ plt.xlabel("Epoch")
 plt.ylabel("Accuracy")
 plt.ylim([0.5, 1])
 plt.legend(loc="lower right")
-
-# test_loss, test_acc = model.evaluate()
