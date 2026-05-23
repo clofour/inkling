@@ -5,6 +5,11 @@ CATEGORIES = [
     "carrot",
     "cat",
     "house",
-    "umbrella"
+    "umbrella",
+    "airplane",
+    "clock",
+    "cloud",
+    "star",
+    "tree"
 ]
 IMAGE_SIZE = 28
