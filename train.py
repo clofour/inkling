@@ -5,6 +5,7 @@ import os.path as path
 import numpy as np
 import tensorflow as tf
 from keras import models, layers, losses
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
 DRAWING_COUNT = 10000
@@ -74,9 +75,16 @@ model.compile(optimizer="adam", loss=losses.SparseCategoricalCrossentropy(from_l
 history = model.fit(x=x_training, y=y_training, epochs=10, validation_data=(x_validation, y_validation))
 model.save(path.join(MODEL_DIR, f"{date}.keras"))
 
-plt.plot(history.history["accuracy"], label="accuracy")
-plt.plot(history.history["val_accuracy"], label="val_accuracy")
-plt.xlabel("Epoch")
-plt.ylabel("Accuracy")
-plt.ylim([0.5, 1])
-plt.legend(loc="lower right")
+y_prediction = model.predict(x_validation)
+y_prediction = np.argmax(y_prediction, axis=1)
+matrix = confusion_matrix(y_validation, y_prediction)
+matrix_display = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=CATEGORIES)
+matrix_display.plot()
+
+# plt.plot(history.history["accuracy"], label="accuracy")
+# plt.plot(history.history["val_accuracy"], label="val_accuracy")
+# plt.xlabel("Epoch")
+# plt.ylabel("Accuracy")
+# plt.ylim([0.5, 1])
+# plt.legend(loc="lower right")
+plt.show()
