@@ -13,7 +13,7 @@ CATEGORIES = [
     "house",
     "umbrella"
 ]
-DRAWING_COUNT = 1000
+DRAWING_COUNT = 10000
 VALIDATION_FRACTION = 0.2
 
 data = {}
@@ -72,6 +72,7 @@ model.add(layers.Conv2D(64, (3, 3), activation="relu"))
 model.add(layers.MaxPooling2D(2, 2))
 model.add(layers.Flatten())
 model.add(layers.Dense(64, activation="relu"))
+model.add(layers.Dropout(0.3))
 model.add(layers.Dense(len(CATEGORIES)))
 model.compile(optimizer="adam", loss=losses.SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
 history = model.fit(x=x_training, y=y_training, epochs=10, validation_data=(x_validation, y_validation))
