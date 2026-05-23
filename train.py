@@ -1,3 +1,4 @@
+from shared import DATA_DIR, MODEL_DIR, CATEGORIES
 import random
 from datetime import datetime
 import os.path as path
@@ -6,15 +7,6 @@ import tensorflow as tf
 from keras import models, layers, losses
 import matplotlib.pyplot as plt
 
-DATA_DIR = "./data"
-MODEL_DIR = "./models"
-CATEGORIES = [
-    "apple",
-    "carrot",
-    "cat",
-    "house",
-    "umbrella"
-]
 DRAWING_COUNT = 10000
 VALIDATION_FRACTION = 0.2
 

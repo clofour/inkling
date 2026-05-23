@@ -1,10 +1,10 @@
+from shared import MODEL_DIR
 import os.path as path
 from PIL import Image
 import numpy as np
 from keras import models
 import gradio as gr
 
-MODEL_DIR = "./models"
 MODEL_NAME = "20260523_1739"
 MODEL_PATH = path.join(MODEL_DIR, f"{MODEL_NAME}.keras")
 
