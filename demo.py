@@ -1,4 +1,4 @@
-from shared import MODEL_DIR
+from shared import MODEL_DIR, IMAGE_SIZE
 import os.path as path
 from PIL import Image
 import numpy as np
@@ -13,12 +13,12 @@ model = models.load_model(MODEL_PATH)
 def process_image(image):
     pillow_image = Image.fromarray(image)
     pillow_image = pillow_image.convert("L")
-    pillow_image = pillow_image.resize((28, 28), Image.Resampling.LANCZOS)
+    pillow_image = pillow_image.resize((IMAGE_SIZE, IMAGE_SIZE), Image.Resampling.LANCZOS)
 
     np_image = np.array(pillow_image)
     np_image = 255 - np_image
     np_image = np_image / 255
-    np_image = np_image.reshape(1, 28, 28, 1)
+    np_image = np_image.reshape(1, IMAGE_SIZE, IMAGE_SIZE, 1)
 
     return np_image
 

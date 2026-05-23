@@ -7,3 +7,4 @@ CATEGORIES = [
     "house",
     "umbrella"
 ]
+IMAGE_SIZE = 28

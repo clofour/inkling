@@ -1,4 +1,4 @@
-from shared import DATA_DIR, MODEL_DIR, CATEGORIES
+from shared import DATA_DIR, MODEL_DIR, CATEGORIES, IMAGE_SIZE
 import random
 from datetime import datetime
 import os.path as path
@@ -23,7 +23,7 @@ plt.figure(figsize=(10, 10))
 for i in range(25):
     chosen_category = random.choice(CATEGORIES)
     bitmap = data[chosen_category][i]
-    image = bitmap.reshape(28, 28)
+    image = bitmap.reshape(IMAGE_SIZE, IMAGE_SIZE)
 
     plt.subplot(5,5,i+1)
     plt.xticks([])
@@ -47,7 +47,7 @@ labels = np.concatenate(labels)
 images = np.array(images)
 labels = np.array(labels)
 
-images = images.reshape(-1, 28, 28, 1)
+images = images.reshape(-1, IMAGE_SIZE, IMAGE_SIZE, 1)
 images = images / 255.0
 
 permutation = np.random.permutation(len(images))
@@ -61,7 +61,7 @@ x_validation = images[data_split_index:]
 y_validation = labels[data_split_index:]
 
 model = models.Sequential()
-model.add(layers.Input((28, 28, 1)))
+model.add(layers.Input((IMAGE_SIZE, IMAGE_SIZE, 1)))
 model.add(layers.Conv2D(32, (3, 3), activation="relu"))
 model.add(layers.MaxPooling2D(2, 2))
 model.add(layers.Conv2D(64, (3, 3), activation="relu"))
