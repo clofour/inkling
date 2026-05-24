@@ -39,29 +39,36 @@ def predict(result):
 def generate_category():
     return random.choice(CATEGORIES)
 
-with gr.Blocks(css_paths=CSS_FILE) as demo:
+with gr.Blocks() as demo:
     gr.Markdown("# Drawing Classifier")
     gr.Markdown("Draw the generated category!")
 
-    category_output = gr.Text(
-        label="Category to draw",
-        interactive=False
-    )
-    generate_category_button = gr.Button("Generate Category")
-    generate_category_button.click(fn=generate_category, outputs=category_output)
+    with gr.Row():
+        with gr.Column(scale=1):
+            category_output = gr.Text(
+                label="Category to draw",
+                interactive=False
+            )
+            generate_category_button = gr.Button("Generate Category")
+            generate_category_button.click(fn=generate_category, outputs=category_output)
+            prediction_output = gr.Text(
+                label="Prediction"
+            )
 
-    sketchpad_input = gr.Sketchpad(
-        image_mode="L",
-        sources=[],
-        buttons=[],
-        transforms=[],
-        layers=False
-    )
-    submit_button = gr.Button("Submit")
-    prediction_output = gr.Text(
-        label="Prediction"
-    )
-    submit_button.click(fn=predict, inputs=sketchpad_input, outputs=prediction_output)
-    clear_button = gr.ClearButton(components=[category_output, sketchpad_input, prediction_output])
-
+        with gr.Column(scale=2):
+            sketchpad_input = gr.Sketchpad(
+                value=Image.new("L", (280, 280), "white"),
+                image_mode="L",
+                sources=[],
+                buttons=[],
+                transforms=[],
+                layers=False,
+                label="Canvas",
+                elem_id="sketchpad"
+            )
+            with gr.Row():
+                submit_button = gr.Button("Submit")
+                submit_button.click(fn=predict, inputs=sketchpad_input, outputs=prediction_output)
+                clear_button = gr.ClearButton(components=[category_output, sketchpad_input, prediction_output])
+            
 demo.launch()
