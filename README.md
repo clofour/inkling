@@ -1,8 +1,8 @@
 # inkling
 
-inkling is a convolutional neural network used for classifying drawings. It was trained on Google's QuickDraw dataset.
+inkling is a convolutional neural network used for classifying drawings. It was created using numpy/tensorflow/keras and trained on a subset of Google's QuickDraw dataset. It includes visualizations of training information using matplotlib/scikit-learn, as well as a demo with gradio.
 
-I created this project as a first step into machine learning. I chose the QuickDraw dataset because it was easy to understand, familiar and fun!
+I created this project as a first step into machine learning. I used the QuickDraw dataset because it was easy to understand, familiar and fun!
 
 ## Quick Start
 
@@ -29,6 +29,20 @@ inkling currently supports these drawing categories:
 * tree
 
 More categories can be added by downloading the corresponding numpy bitmap files, adding the new categories in shared.py and retraining the model.
+
+### Concepts
+Convolutional Neural Networks are systems designed to identify spatial relationships between pixels, inspired by the human visual system. They are composed of the following layers:
+* **Input layers** receive raw image data.
+* **Convolution layers** scans the input data using filters and extracts features to output a feature map.
+* **Activation layers** introduce non-linearity into the network to allow models to learn more complex patterns. Examples of activation functions include ReLU and Leaky ReLU.
+* **Pooling layers** reduce the dimensions of feature maps to prevent overfitting (memorization of training data) and reduce resource usage.
+* **Flattening layers** convert the multi-dimensional feature maps into a one-dimensional vector.
+* **Dense layers** performs reasoning and produces final classification scores.
+* **Output layers** convert final scores into probabilities using activation functions such as softmax.
+
+### Useful Resources
+* [Introduction to Convolution Neural Network by GeeksForGeeks](https://www.geeksforgeeks.org/machine-learning/introduction-convolution-neural-network/)
+* [Convolution Neural Network (CNN) by TensorFlow](https://www.tensorflow.org/tutorials/images/cnn)
 
 ## Images
 ![Demo](/docs/assets/demo.png)
