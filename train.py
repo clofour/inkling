@@ -9,7 +9,7 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
 # VISUALIZE_COUNT = 50
-DRAWING_COUNT = 10000
+DRAWING_COUNT = 20
 VALIDATION_FRACTION = 0.2
 
 date = datetime.now().strftime(r"%Y%m%d_%H%M")
@@ -92,20 +92,24 @@ def train_model(model, x_training, y_training, x_validation, y_validation):
     return training_info
 
 def visualize_results(model, x_training, y_training, x_validation, y_validation, training_info):
-    plt.figure()
+    figure, axes = plt.subplots(1, 2, figsize=(12, 5))
+    cm_axis = axes[0]
+    accuracy_axis = axes[1]
+
     y_prediction = model.predict(x_validation)
     y_prediction = np.argmax(y_prediction, axis=1)
     matrix = confusion_matrix(y_validation, y_prediction)
     matrix_display = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=CATEGORIES)
-    matrix_display.plot()
+    matrix_display.plot(ax=cm_axis, colorbar=False)
+    cm_axis.set_title("Confusion Matrix")
 
-    plt.figure()
-    plt.plot(training_info.history["accuracy"], label="accuracy")
-    plt.plot(training_info.history["val_accuracy"], label="val_accuracy")
-    plt.xlabel("Epoch")
-    plt.ylabel("Accuracy")
-    plt.ylim([0.5, 1])
-    plt.legend(loc="lower right")
+    accuracy_axis.plot(training_info.history["accuracy"], label="accuracy")
+    accuracy_axis.plot(training_info.history["val_accuracy"], label="val_accuracy")
+    accuracy_axis.set_xlabel("Epoch")
+    accuracy_axis.set_ylabel("Accuracy")
+    accuracy_axis.set_ylim([0.5, 1])
+    accuracy_axis.legend(loc="lower right")
+    accuracy_axis.set_title("Accuracy")
 
     plt.show()
 
