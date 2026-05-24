@@ -8,8 +8,7 @@ from keras import models, layers, losses
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
-# VISUALIZE_COUNT = 50
-DRAWING_COUNT = 20
+DRAWING_COUNT = 10000
 VALIDATION_FRACTION = 0.2
 
 date = datetime.now().strftime(r"%Y%m%d_%H%M")

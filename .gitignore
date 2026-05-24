@@ -1,4 +1,6 @@
 __pycache__/
 .venv/
-data/
-models/
+data/*
+models/*
+
+!models/sample.keras

@@ -7,7 +7,7 @@ import tensorflow as tf
 from keras import models
 import gradio as gr
 
-MODEL_NAME = "20260523_2000"
+MODEL_NAME = "sample"
 MODEL_PATH = path.join(MODEL_DIR, f"{MODEL_NAME}.keras")
 CSS_FILE = "./demo.css"
 
