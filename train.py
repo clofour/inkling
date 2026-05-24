@@ -8,83 +8,110 @@ from keras import models, layers, losses
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
+# VISUALIZE_COUNT = 50
 DRAWING_COUNT = 10000
 VALIDATION_FRACTION = 0.2
 
 date = datetime.now().strftime(r"%Y%m%d_%H%M")
 
-data = {}
+def load_data():
+    data = {}
 
-for category in CATEGORIES:
-    category_file_path = path.join(DATA_DIR, f"{category}.npy")
-    category_data = np.load(file=category_file_path)
-    data[category] = category_data
+    for category in CATEGORIES:
+        category_file_path = path.join(DATA_DIR, f"{category}.npy")
+        category_data = np.load(file=category_file_path)
+        data[category] = category_data
 
-plt.figure(figsize=(10, 10))
-for i in range(25):
-    chosen_category = random.choice(CATEGORIES)
-    bitmap = data[chosen_category][i]
-    image = bitmap.reshape(IMAGE_SIZE, IMAGE_SIZE)
+    return data
 
-    plt.subplot(5,5,i+1)
-    plt.xticks([])
-    plt.yticks([])
-    plt.grid(False)
-    plt.imshow(image)
-    plt.xlabel(chosen_category)
-plt.show()
+def visualize_data(data):
+    plt.figure(figsize=(10, 10))
+    for i in range(25):
+        chosen_category = random.choice(CATEGORIES)
+        bitmap = data[chosen_category][i]
+        image = bitmap.reshape(IMAGE_SIZE, IMAGE_SIZE)
 
-images = []
-labels = []
+        plt.subplot(5,5,i+1)
+        plt.xticks([])
+        plt.yticks([])
+        plt.grid(False)
+        plt.imshow(image)
+        plt.xlabel(chosen_category)
+    
+    plt.show()
 
-for label, category in enumerate(CATEGORIES):
-    category_data = data[category]
-    images.append(category_data[:DRAWING_COUNT])
-    labels.append(np.full(DRAWING_COUNT, label))
+def process_data(data):
+    images = []
+    labels = []
 
-images = np.concatenate(images)
-labels = np.concatenate(labels)
+    for label, category in enumerate(CATEGORIES):
+        category_data = data[category]
+        images.append(category_data[:DRAWING_COUNT])
+        labels.append(np.full(DRAWING_COUNT, label))
 
-images = np.array(images)
-labels = np.array(labels)
+    images = np.concatenate(images)
+    labels = np.concatenate(labels)
 
-images = images.reshape(-1, IMAGE_SIZE, IMAGE_SIZE, 1)
-images = images / 255.0
+    images = np.array(images)
+    labels = np.array(labels)
 
-permutation = np.random.permutation(len(images))
-images = images[permutation]
-labels = labels[permutation]
+    images = images.reshape(-1, IMAGE_SIZE, IMAGE_SIZE, 1)
+    images = images / 255.0
 
-data_split_index = int(len(images) * VALIDATION_FRACTION)
-x_training = images[:data_split_index]
-y_training = labels[:data_split_index]
-x_validation = images[data_split_index:]
-y_validation = labels[data_split_index:]
+    permutation = np.random.permutation(len(images))
+    images = images[permutation]
+    labels = labels[permutation]
 
-model = models.Sequential()
-model.add(layers.Input((IMAGE_SIZE, IMAGE_SIZE, 1)))
-model.add(layers.Conv2D(32, (3, 3), activation="relu"))
-model.add(layers.MaxPooling2D(2, 2))
-model.add(layers.Conv2D(64, (3, 3), activation="relu"))
-model.add(layers.MaxPooling2D(2, 2))
-model.add(layers.Flatten())
-model.add(layers.Dense(64, activation="relu"))
-model.add(layers.Dropout(0.3))
-model.add(layers.Dense(len(CATEGORIES)))
-model.compile(optimizer="adam", loss=losses.SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
-history = model.fit(x=x_training, y=y_training, epochs=10, validation_data=(x_validation, y_validation))
-model.save(path.join(MODEL_DIR, f"{date}.keras"))
+    data_split_index = int(len(images) * VALIDATION_FRACTION)
+    x_training = images[:data_split_index]
+    y_training = labels[:data_split_index]
+    x_validation = images[data_split_index:]
+    y_validation = labels[data_split_index:]
 
-y_prediction = model.predict(x_validation)
-y_prediction = np.argmax(y_prediction, axis=1)
-matrix = confusion_matrix(y_validation, y_prediction)
-matrix_display = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=CATEGORIES)
-matrix_display.plot()
+    return x_training, y_training, x_validation, y_validation
 
-# plt.plot(history.history["accuracy"], label="accuracy")
-# plt.plot(history.history["val_accuracy"], label="val_accuracy")
-# plt.xlabel("Epoch")
-# plt.ylabel("Accuracy")
-# plt.ylim([0.5, 1])
-# plt.legend(loc="lower right")
-plt.show()
+def create_model():
+    model = models.Sequential()
+    model.add(layers.Input((IMAGE_SIZE, IMAGE_SIZE, 1)))
+    model.add(layers.Conv2D(32, (3, 3), activation="relu"))
+    model.add(layers.MaxPooling2D(2, 2))
+    model.add(layers.Conv2D(64, (3, 3), activation="relu"))
+    model.add(layers.MaxPooling2D(2, 2))
+    model.add(layers.Flatten())
+    model.add(layers.Dense(64, activation="relu"))
+    model.add(layers.Dropout(0.3))
+    model.add(layers.Dense(len(CATEGORIES)))
+    model.compile(optimizer="adam", loss=losses.SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
+
+    return model
+
+def train_model(model, x_training, y_training, x_validation, y_validation):
+    training_info = model.fit(x=x_training, y=y_training, epochs=10, validation_data=(x_validation, y_validation))
+    model.save(path.join(MODEL_DIR, f"{date}.keras"))
+
+    return training_info
+
+def visualize_results(model, x_training, y_training, x_validation, y_validation, training_info):
+    plt.figure()
+    y_prediction = model.predict(x_validation)
+    y_prediction = np.argmax(y_prediction, axis=1)
+    matrix = confusion_matrix(y_validation, y_prediction)
+    matrix_display = ConfusionMatrixDisplay(confusion_matrix=matrix, display_labels=CATEGORIES)
+    matrix_display.plot()
+
+    plt.figure()
+    plt.plot(training_info.history["accuracy"], label="accuracy")
+    plt.plot(training_info.history["val_accuracy"], label="val_accuracy")
+    plt.xlabel("Epoch")
+    plt.ylabel("Accuracy")
+    plt.ylim([0.5, 1])
+    plt.legend(loc="lower right")
+
+    plt.show()
+
+data = load_data()
+visualize_data(data)
+x_training, y_training, x_validation, y_validation = process_data(data)
+model = create_model()
+training_info = train_model(model, x_training, y_training, x_validation, y_validation)
+visualize_results(model, x_training, y_training, x_validation, y_validation, training_info)
