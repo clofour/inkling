@@ -4,11 +4,11 @@ from datetime import datetime
 import os.path as path
 import numpy as np
 import tensorflow as tf
-from keras import models, layers, losses
+from keras import models, layers, losses, callbacks
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
-DRAWING_COUNT = 10000
+DRAWING_COUNT = 50000
 VALIDATION_FRACTION = 0.2
 
 date = datetime.now().strftime(r"%Y%m%d_%H%M")
@@ -85,7 +85,13 @@ def create_model():
     return model
 
 def train_model(model, x_training, y_training, x_validation, y_validation):
-    training_info = model.fit(x=x_training, y=y_training, epochs=10, validation_data=(x_validation, y_validation))
+    early_stop = callbacks.EarlyStopping(
+        monitor="val_loss",
+        patience=3,
+        restore_best_weights=True
+    )
+
+    training_info = model.fit(x=x_training, y=y_training, epochs=10, validation_data=(x_validation, y_validation), callbacks=[early_stop])
     model.save(path.join(MODEL_DIR, f"{date}.keras"))
 
     return training_info
