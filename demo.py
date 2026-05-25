@@ -39,8 +39,9 @@ def predict(result):
     probabilities = tf.nn.softmax(logits[0]).numpy()
     predicted_index = np.argmax(probabilities)
     predicted_category = CATEGORIES[predicted_index]
+    confidence = probabilities[predicted_index]
 
-    return predicted_category
+    return f"{predicted_category} ({confidence:.2%})"
 
 def clear_all():
     return None, generate_blank_canvas(), None
