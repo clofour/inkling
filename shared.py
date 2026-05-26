@@ -11,6 +11,16 @@ CATEGORIES = [
     "cloud",
     "star",
     "tree",
-    "smiley face"
+    "smiley face",
+    "table",
+    "pizza",
+    "book",
+    "computer",
+    "ice cream",
+    "lamp",
+    "key",
+    "pencil",
+    "flower",
+    "cake"
 ]
 IMAGE_SIZE = 28
