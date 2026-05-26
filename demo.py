@@ -41,7 +41,10 @@ def predict(result):
     predicted_category = CATEGORIES[predicted_index]
     confidence = probabilities[predicted_index]
 
-    return f"{predicted_category} ({confidence:.2%})"
+    if confidence >= 0.5:
+        return f"{predicted_category} ({confidence:.2%})"
+    else:
+        return "No idea!"
 
 def clear_all():
     return None, generate_blank_canvas(), None
