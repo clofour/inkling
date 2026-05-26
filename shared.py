@@ -10,6 +10,7 @@ CATEGORIES = [
     "clock",
     "cloud",
     "star",
-    "tree"
+    "tree",
+    "smileyface"
 ]
 IMAGE_SIZE = 28
