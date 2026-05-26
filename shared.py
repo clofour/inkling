@@ -11,6 +11,6 @@ CATEGORIES = [
     "cloud",
     "star",
     "tree",
-    "smileyface"
+    "smiley face"
 ]
 IMAGE_SIZE = 28
