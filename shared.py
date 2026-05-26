@@ -17,7 +17,7 @@ CATEGORIES = [
     "book",
     "computer",
     "ice cream",
-    "lamp",
+    "floor lamp",
     "key",
     "pencil",
     "flower",
