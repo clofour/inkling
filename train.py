@@ -8,7 +8,7 @@ from keras import models, layers, losses, callbacks
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
-DRAWING_COUNT = 60000
+DRAWING_COUNT = 10000
 VALIDATION_FRACTION = 0.2
 
 date = datetime.now().strftime(r"%Y%m%d_%H%M")
@@ -72,6 +72,15 @@ def process_data(data):
 def create_model():
     model = models.Sequential()
     model.add(layers.Input((IMAGE_SIZE, IMAGE_SIZE, 1)))
+
+    return model
+
+def augment_model(model):
+    model.add(layers.RandomTranslation(height_factor=0.1, width_factor=0.1, fill_mode="constant", fill_value=0, interpolation="nearest"))
+    model.add(layers.RandomZoom(height_factor=(0, 0.2), fill_mode="constant", fill_value=0, interpolation="nearest"))
+    model.add(layers.RandomCrop(height=IMAGE_SIZE, width=IMAGE_SIZE))
+
+def complete_model(model):
     model.add(layers.Conv2D(32, (3, 3), activation="relu"))
     model.add(layers.MaxPooling2D(2, 2))
     model.add(layers.Conv2D(64, (3, 3), activation="relu"))
@@ -81,8 +90,6 @@ def create_model():
     model.add(layers.Dropout(0.3))
     model.add(layers.Dense(len(CATEGORIES)))
     model.compile(optimizer="adam", loss=losses.SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
-
-    return model
 
 def train_model(model, x_training, y_training, x_validation, y_validation):
     early_stop = callbacks.EarlyStopping(
@@ -95,6 +102,21 @@ def train_model(model, x_training, y_training, x_validation, y_validation):
     model.save(path.join(MODEL_DIR, f"{date}.keras"))
 
     return training_info
+
+def visualize_augmentation(model, x_training, y_training):
+    sample_x = x_training[:5]
+    augmentation_y = model.call(sample_x, training=True)
+
+    figure, axes = plt.subplots(2, 5, figsize=(12, 5))
+    for i in range(5):
+        original_axis = axes[0, i]
+        augmented_axis = axes[1, i]
+
+        original_axis.imshow(sample_x[i].squeeze())
+        augmented_axis.imshow(augmentation_y[i].numpy().squeeze())
+    
+    plt.show()
+        
 
 def visualize_results(model, x_training, y_training, x_validation, y_validation, training_info):
     figure, axes = plt.subplots(1, 2, figsize=(12, 5))
@@ -122,5 +144,8 @@ data = load_data()
 visualize_data(data)
 x_training, y_training, x_validation, y_validation = process_data(data)
 model = create_model()
+augment_model(model)
+visualize_augmentation(model, x_training, y_training)
+complete_model(model)
 training_info = train_model(model, x_training, y_training, x_validation, y_validation)
 visualize_results(model, x_training, y_training, x_validation, y_validation, training_info)

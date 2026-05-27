@@ -50,7 +50,7 @@ def clear_all():
     return None, generate_blank_canvas(), None
 
 with gr.Blocks() as demo:
-    gr.Markdown("# Drawing Classifier")
+    gr.Markdown("# Inkling")
     gr.Markdown("Draw the generated category!")
 
     with gr.Row():
