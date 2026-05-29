@@ -14,7 +14,7 @@ CSS_FILE = "./demo.css"
 model = models.load_model(MODEL_PATH)
 
 def generate_blank_canvas():
-    return Image.new("L", (280, 280), "white")
+    return Image.new("L", (IMAGE_SIZE * 10, IMAGE_SIZE * 10), "white")
 
 def generate_category():
     return random.choice(CATEGORIES)

@@ -31,9 +31,8 @@ def preprocess_data(data):
 
     return preprocessed_data
 
+# Source: https://github.com/googlecreativelab/quickdraw-dataset/issues/19#issuecomment-402247262
 def process_data(vector_images, side=28, line_diameter=16, padding=16, bg_color=(0,0,0), fg_color=(1,1,1)):
-    # Source: https://github.com/googlecreativelab/quickdraw-dataset/issues/19#issuecomment-402247262
-    
     original_side = 256.
     
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, side, side)

@@ -17,6 +17,8 @@ def load_data():
     data = {}
 
     for category in CATEGORIES:
+        print(f"Loading {category} data")
+
         category_file_path = path.join(PROCESSED_DATA_DIR, f"{category}.npy")
         category_data = np.load(file=category_file_path)
         data[category] = category_data
@@ -81,12 +83,23 @@ def augment_model(model):
     model.add(layers.RandomCrop(height=IMAGE_SIZE, width=IMAGE_SIZE))
 
 def complete_model(model):
-    model.add(layers.Conv2D(32, (3, 3), activation="relu"))
+    model.add(layers.Conv2D(32, (3, 3)), padding="same")
+    model.add(layers.BatchNormalization())
+    model.add(layers.Activation("relu"))
     model.add(layers.MaxPooling2D(2, 2))
-    model.add(layers.Conv2D(64, (3, 3), activation="relu"))
+
+    model.add(layers.Conv2D(64, (3, 3)), padding="same")
+    model.add(layers.BatchNormalization())
+    model.add(layers.Activation("relu"))
     model.add(layers.MaxPooling2D(2, 2))
+
+    model.add(layers.Conv2D(128, (3, 3)), padding="same")
+    model.add(layers.BatchNormalization())
+    model.add(layers.Activation("relu"))
+    model.add(layers.MaxPooling2D(2, 2))
+
     model.add(layers.Flatten())
-    model.add(layers.Dense(64, activation="relu"))
+    model.add(layers.Dense(128, activation="relu"))
     model.add(layers.Dropout(0.3))
     model.add(layers.Dense(len(CATEGORIES)))
     model.compile(optimizer="adam", loss=losses.SparseCategoricalCrossentropy(from_logits=True), metrics=["accuracy"])
