@@ -64,10 +64,10 @@ def process_data(data):
     labels = labels[permutation]
 
     data_split_index = int(len(images) * VALIDATION_FRACTION)
-    x_training = images[:data_split_index]
-    y_training = labels[:data_split_index]
-    x_validation = images[data_split_index:]
-    y_validation = labels[data_split_index:]
+    x_training = images[data_split_index:]
+    y_training = labels[data_split_index:]
+    x_validation = images[:data_split_index]
+    y_validation = labels[:data_split_index]
 
     return x_training, y_training, x_validation, y_validation
 
