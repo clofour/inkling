@@ -1,4 +1,4 @@
-from shared import DATA_DIR, MODEL_DIR, CATEGORIES, IMAGE_SIZE
+from shared import PROCESSED_DATA_DIR, MODEL_DIR, CATEGORIES, IMAGE_SIZE
 import random
 from datetime import datetime
 import os.path as path
@@ -17,7 +17,7 @@ def load_data():
     data = {}
 
     for category in CATEGORIES:
-        category_file_path = path.join(DATA_DIR, f"{category}.npy")
+        category_file_path = path.join(PROCESSED_DATA_DIR, f"{category}.npy")
         category_data = np.load(file=category_file_path)
         data[category] = category_data
 

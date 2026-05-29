@@ -1,4 +1,6 @@
 DATA_DIR = "./data"
+RAW_DATA_DIR = f"{DATA_DIR}/raw"
+PROCESSED_DATA_DIR = f"{DATA_DIR}/processed"
 MODEL_DIR = "./models"
 CATEGORIES = [
     "apple",
@@ -43,4 +45,4 @@ CATEGORIES = [
     "leaf",
     "snowman"
 ]
-IMAGE_SIZE = 28
+IMAGE_SIZE = 64

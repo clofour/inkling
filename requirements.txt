@@ -5,3 +5,4 @@ matplotlib==3.10.9
 scikit-learn==1.8.0
 gradio==6.14.0
 pillow==12.2.0
+cairocffi==1.7.1
